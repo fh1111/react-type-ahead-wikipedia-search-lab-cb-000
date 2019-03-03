@@ -1,28 +1,16 @@
 'use strict';
 
-export default class Store {
-  constructor(initialState) {
-    this.state = initialState;
-    this.listeners = [];
-  }
+import Store from './Store';
 
-  addListener(listener) {
-    this.listeners.push(listener);
-    const removeListener = () => {
-      this.listeners = this.listeners
-        .filter(l => listener !== l);
-    };
-    return removeListener;
-  }
-
-  setState(state) {
-    this.state = state;
-    for (const listener of this.listeners) {
-      listener.call(this, state);
-    }
-  }
-
-  getState() {
-    return this.state;
+class ResultStore extends Store {
+  isOutdated(updated) {
+    return this.getState().updated > updated;
   }
 }
+
+const resultStore = new ResultStore({
+  results: [],
+  updated: new Date(),
+});
+
+export default resultStore;
